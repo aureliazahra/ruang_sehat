@@ -19,11 +19,10 @@ class MyApp extends StatelessWidget {
       initialRoute: AuthScreen.routeName,
 
       routes: {
-        AuthScreen.routeName: (context) => const AuthScreen(),
         SplashScreen.routeName: (context) => const SplashScreen(),
+        AuthScreen.routeName: (context) => const AuthScreen(),
+        
       },
-
-      home: const SplashScreen(),
     );
   }
 }

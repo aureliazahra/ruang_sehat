@@ -30,6 +30,22 @@ class _AuthScreenState extends State<AuthScreen> {
                   topRight: Radius.circular(24),
                 ),
               ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 32,
+                ),
+                child: SingleChildScrollView(child: Column(children: [
+                  Container(
+                    padding: const EdgeInsets.all(4),
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  )
+                ])),
+              ),
             ),
           ),
         ],
