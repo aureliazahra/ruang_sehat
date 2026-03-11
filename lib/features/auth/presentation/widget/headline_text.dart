@@ -14,9 +14,12 @@ class HeadlineText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+
     return SafeArea(
       child: SingleChildScrollView(
-        child: SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: screenHeight),
           child: Padding(
             padding: EdgeInsets.fromLTRB(24, 10, 24, bottomHeight + 10),
             child: Column(
@@ -37,7 +40,29 @@ class HeadlineText extends StatelessWidget {
                       height: 24,
                     ),
                   ),
-                )
+                ),
+                Text(
+                  isLogin
+                      ? "Go ahead and complete your \naccount and setup"
+                      : "Register now to access \nyour personal account",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                    height: 1.2,
+                  ),
+                ),
+                Text(
+                  isLogin
+                      ? "Create your account and simplify your workflow instantly"
+                      : "Register now to access your personal account",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    height: 1.2,
+                  ),
+                ),
               ],
             ),
           ),
