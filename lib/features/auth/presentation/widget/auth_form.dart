@@ -105,6 +105,27 @@ class _AuthFormState extends State<AuthForm> {
             ),
           ),
         ),
+
+        // Button Login and Register
+        SizedBox(height: 18),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            minimumSize: Size(double.infinity, 53),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+          child: Text(
+            widget.isLogin ? "Login" : "Register",
+            style: TextStyle(
+              color: AppColors.secondary,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
       ],
     );
   }
