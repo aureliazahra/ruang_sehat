@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
 
-      initialRoute: AuthScreen.routeName,
+      initialRoute: SplashScreen.routeName,
 
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),

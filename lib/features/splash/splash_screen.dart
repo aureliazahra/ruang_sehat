@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/auth/presentation/screens/auth_screen.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -50,6 +51,14 @@ class _SplashScreenState extends State<SplashScreen>
     _iconController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _textController.forward();
+      }
+    });
+
+    _textController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.pushReplacementNamed(context, AuthScreen.routeName);
+        });
       }
     });
   }
