@@ -27,21 +27,18 @@ class _SplashScreenState extends State<SplashScreen>
       vsync: this,
     );
 
-    _iconController.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _iconController.forward();
-      }
-    });
-
     _textController = AnimationController(
-      duration: const Duration(seconds: 900),
+      duration: const Duration(milliseconds: 900),
       vsync: this,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 10),
-      end: Offset(0, -0.5),
-    ).animate(CurvedAnimation(parent: _iconController, curve: Curves.easeOut));
+    _slideAnimation =
+        Tween<Offset>(
+          begin: const Offset(0, -10),
+          end: Offset(0, -0.5),
+        ).animate(
+          CurvedAnimation(parent: _iconController, curve: Curves.bounceOut),
+        );
 
     _textSlideAnimation = Tween<double>(
       begin: 0,
@@ -49,7 +46,12 @@ class _SplashScreenState extends State<SplashScreen>
     ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOut));
 
     _iconController.forward();
-    _textController.forward();
+
+    _iconController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _textController.forward();
+      }
+    });
   }
 
   @override
@@ -76,13 +78,25 @@ class _SplashScreenState extends State<SplashScreen>
                     ),
                   );
                 },
-                child: Text(
-                  "Ruang Sehat",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.secondary,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                child: AnimatedBuilder(
+                  animation: _textSlideAnimation,
+                  builder: (context, child) {
+                    return ClipRRect(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: _textSlideAnimation.value,
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Text(
+                    "Ruang Sehat",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: AppColors.secondary,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
