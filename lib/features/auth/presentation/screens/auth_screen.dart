@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
+import 'package:ruang_sehat/features/auth/presentation/widget/headline_text.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -20,6 +21,10 @@ class _AuthScreenState extends State<AuthScreen> {
       backgroundColor: AppColors.primary,
       body: Stack(
         children: [
+          HeadlineText(
+            isLogin: isLogin,
+            bottomHeight: bottomHeight,
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -40,6 +45,7 @@ class _AuthScreenState extends State<AuthScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
+                      // Toggle Button for Login and Register
                       Container(
                         padding: const EdgeInsets.all(4),
                         height: 50,
