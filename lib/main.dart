@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/auth/presentation/screens/auth_screen.dart';
 import 'package:ruang_sehat/features/splash/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,9 +16,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: GoogleFonts.poppinsTextTheme()),
 
-      initialRoute: SplashScreen.routeName,
+      initialRoute: AuthScreen.routeName,
 
-      routes: {SplashScreen.routeName: (context) => const SplashScreen()},
+      routes: {
+        AuthScreen.routeName: (context) => const AuthScreen(),
+        SplashScreen.routeName: (context) => const SplashScreen(),
+      },
 
       home: const SplashScreen(),
     );
