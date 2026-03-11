@@ -11,33 +11,85 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with TickerProviderStateMixin {
+  late AnimationController _iconController;
+  late AnimationController _textController;
+
+  late Animation<Offset> _slideAnimation;
+  late Animation<double> _textSlideAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _iconController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+
+    _iconController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _iconController.forward();
+      }
+    });
+
+    _textController = AnimationController(
+      duration: const Duration(seconds: 900),
+      vsync: this,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 10),
+      end: Offset(0, -0.5),
+    ).animate(CurvedAnimation(parent: _iconController, curve: Curves.easeOut));
+
+    _textSlideAnimation = Tween<double>(
+      begin: 0,
+      end: 1,
+    ).animate(CurvedAnimation(parent: _textController, curve: Curves.easeOut));
+
+    _iconController.forward();
+    _textController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary, 
+      backgroundColor: AppColors.primary,
       body: SafeArea(
         child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SvgPicture.asset(
-                'assets/icons/logo.svg',
-                width: 60,
+              SlideTransition(
+                position: _slideAnimation,
+                child: SvgPicture.asset("assets/icons/logo.svg"),
               ),
-              Text(
-                "Ruang Sehat",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.secondary,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              AnimatedBuilder(
+                animation: _textSlideAnimation,
+                builder: (context, child) {
+                  return ClipRRect(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      widthFactor: _textSlideAnimation.value,
+                      child: child,
+                    ),
+                  );
+                },
+                child: Text(
+                  "Ruang Sehat",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.secondary,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              )
+              ),
             ],
-          )
+          ),
         ),
       ),
-      );
+    );
   }
 }
