@@ -56,7 +56,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _textController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Future.delayed(const Duration(seconds: 1), () {
+        Future.delayed(const Duration(seconds: 5), () {
           Navigator.pushReplacementNamed(context, AuthScreen.routeName);
         });
       }
