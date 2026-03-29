@@ -34,6 +34,7 @@ class AuthProvider with ChangeNotifier {
         } else {
           _errorMessage = data['message'] ?? 'Something went wrong';
         }
+        return false;
       }
     } catch (error) {
       _errorMessage = 'An error occurred: $error';
@@ -55,8 +56,8 @@ class AuthProvider with ChangeNotifier {
       final response = await AuthService.login(username, password);
       final data = jsonDecode(response.body);
 
-      if(data['successs'] == true) {
-        final token =data['data']['token'];
+      if (data['success'] == true) {
+        final token = data['data']['token'];
 
         //simpan token
         final prefs = await SharedPreferences.getInstance();
@@ -73,9 +74,9 @@ class AuthProvider with ChangeNotifier {
         }
         return false;
       }
-
     } catch (error) {
       _errorMessage = 'An error occurred: $error';
+      return false;
     } finally {
       _isLoading = false;
       notifyListeners();
