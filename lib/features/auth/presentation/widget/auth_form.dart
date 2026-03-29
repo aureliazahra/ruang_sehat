@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/features/home/screens/home_screen.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isLogin;
@@ -22,6 +25,37 @@ class _AuthFormState extends State<AuthForm> {
   final TextEditingController passwordController = TextEditingController();
   bool _isObscure = true;
   bool _rememberMe = false;
+
+  Future<void> handleSubmit(BuildContext context) async {
+    final auth = context.read<AuthProvider>();
+    bool success;
+
+    if (widget.isLogin) {
+      success = await auth.login(
+        usernameController.text.trim(),
+        passwordController.text.trim(),
+      );
+    } else {
+      success = await auth.register(
+        nameController.text.trim(),
+        usernameController.text.trim(),
+        passwordController.text.trim(),
+      );
+    }
+
+    if (!context.mounted) return;
+    if (success) {
+      //tampilan success message dari provider
+      if (auth.successMessage != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            duration: const Duration(seconds: 2),
+            content: Text(auth.successMessage!),
+          ),
+        );
+      }
+    } else {}
+  }
 
   @override
   Widget build(BuildContext context) {

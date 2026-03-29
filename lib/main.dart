@@ -2,9 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:ruang_sehat/features/auth/presentation/screens/auth_screen.dart';
 import 'package:ruang_sehat/features/splash/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
+import 'package:ruang_sehat/features/home/screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -21,7 +31,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SplashScreen.routeName: (context) => const SplashScreen(),
         AuthScreen.routeName: (context) => const AuthScreen(),
-        
+        HomeScreen.routeName: (context) => const HomeScreen(),
       },
     );
   }
