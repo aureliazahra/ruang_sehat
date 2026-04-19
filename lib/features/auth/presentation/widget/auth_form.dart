@@ -4,6 +4,7 @@ import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/home/screens/home_screen.dart';
+import 'package:ruang_sehat/utils/snackbar_helper.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isLogin;
@@ -47,14 +48,28 @@ class _AuthFormState extends State<AuthForm> {
     if (success) {
       //tampilan success message dari provider
       if (auth.successMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            duration: const Duration(seconds: 2),
-            content: Text(auth.successMessage!),
-          ),
+        SnackbarHelper.show(context, message: auth.successMessage!);
+
+        if (widget.isLogin) {
+          Navigator.pushReplacementNamed(
+            context,
+            HomeScreen.routeName,
+            arguments: 0,
+          );
+        } else {
+          widget.onSwitchToLogin();
+        }
+      }
+    } else {
+      //tampilan error message dari provider
+      if (auth.errorMessage != null) {
+        SnackbarHelper.show(
+          context,
+          message: auth.errorMessage!,
+          isError: true,
         );
       }
-    } else {}
+    }
   }
 
   @override
@@ -149,7 +164,7 @@ class _AuthFormState extends State<AuthForm> {
         // Button Login and Register
         SizedBox(height: 18),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () => handleSubmit(context),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             minimumSize: Size(double.infinity, 53),
