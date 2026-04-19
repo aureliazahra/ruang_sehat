@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -43,7 +44,7 @@ class HomeScreen extends StatelessWidget {
               Spacer(),
               //Overlay Menu
               PopupMenuButton<String>(
-                icon: const Icon(Icons.more_horiz, size: 20,),
+                icon: const Icon(Icons.more_horiz, size: 20),
                 offset: const Offset(0, 50),
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(16)),
@@ -59,20 +60,53 @@ class HomeScreen extends StatelessWidget {
                     value: 'logout',
                     child: Row(
                       children: [
-                        Icon(Icons.logout, size: 16, color: AppColors.error,),
+                        Icon(Icons.logout, size: 16, color: AppColors.error),
                         SizedBox(width: 8),
-                        Text('Logout', style: TextStyle(color: AppColors.error),),
+                        Text(
+                          'Logout',
+                          style: TextStyle(color: AppColors.error),
+                        ),
                       ],
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
-        
       ),
-      body: Center(child: Text('Welcome to the Home Screen!')),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            //Text Featured
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Featured',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  ),
+                  const Text(
+                    'See More >',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppColors.hintText,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Featured Card
+            Padding(
+              padding: const EdgeInsets.only(left: 24, bottom: 10),
+              child: const FeaturedCard(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
