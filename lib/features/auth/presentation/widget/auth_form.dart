@@ -5,6 +5,7 @@ import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/home/screens/home_screen.dart';
 import 'package:ruang_sehat/utils/snackbar_helper.dart';
+import 'package:ruang_sehat/widgets/bottom_navbar.dart';
 
 class AuthForm extends StatefulWidget {
   final bool isLogin;
@@ -53,7 +54,7 @@ class _AuthFormState extends State<AuthForm> {
         if (widget.isLogin) {
           Navigator.pushReplacementNamed(
             context,
-            HomeScreen.routeName,
+            BottomNavbar.routeName,
             arguments: 0,
           );
         } else {

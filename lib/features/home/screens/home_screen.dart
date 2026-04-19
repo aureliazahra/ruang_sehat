@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
+import 'package:ruang_sehat/features/home/widgets/recommended_card.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -104,6 +105,36 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.only(left: 24, bottom: 10),
               child: const FeaturedCard(),
             ),
+            //Recommended Card
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Recommend for you',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const Text(
+                        'See More >',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.hintText,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8),
+                  RecommendedCard(),
+                ],
+              )
+            )
           ],
         ),
       ),
