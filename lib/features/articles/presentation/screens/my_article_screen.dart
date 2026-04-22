@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/form_article_screen.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:ruang_sehat/features/articles/presentation/widgets/my_articles_card.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
 
 class MyArticleScreen extends StatelessWidget {
   const MyArticleScreen({super.key});
@@ -50,7 +52,13 @@ class MyArticleScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.pushNamed(
+            context,
+            FormArticleScreen.routeName,
+            arguments: {'isEdit': false},
+          );
+        },
         backgroundColor: AppColors.primary,
         shape: CircleBorder(),
         child: Icon(LucideIcons.plus, color: Colors.white, size: 30),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/form_article_screen.dart';
 
 class PopupMenu extends StatelessWidget {
   const PopupMenu({super.key});
@@ -22,7 +24,15 @@ class PopupMenu extends StatelessWidget {
                 leading: const Icon(Icons.edit, color: Colors.white),
                 title: const Text(
                   'Edit Article', 
-                  style: TextStyle(color: Colors.white)),
+                  style: TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      FormArticleScreen.routeName,
+                      arguments: {'isEdit': true},
+                    );
+                  },
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),

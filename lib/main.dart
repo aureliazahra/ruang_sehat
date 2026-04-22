@@ -9,6 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ruang_sehat/widgets/bottom_navbar.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/form_article_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => ArticleProviders()),
+        
       ],
       child: const MyApp(),
     ),
@@ -41,6 +43,7 @@ class MyApp extends StatelessWidget {
         HomeScreen.routeName: (context) => const HomeScreen(),
         BottomNavbar.routeName: (context) => const BottomNavbar(),
         DetailScreen.routeName: (context) => const DetailScreen(),
+        FormArticleScreen.routeName: (context) => const FormArticleScreen(),
       },
     );
   }
