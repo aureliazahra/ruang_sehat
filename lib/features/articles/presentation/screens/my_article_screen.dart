@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:ruang_sehat/features/articles/presentation/widgets/my_articles_card.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 
 class MyArticleScreen extends StatelessWidget {
   const MyArticleScreen({super.key});
@@ -26,13 +28,17 @@ class MyArticleScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    Text(
-                      '10 Itemss',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: AppColors.hintText,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    Consumer<ArticleProviders>(
+                      builder: (context, provider, _) {
+                        return Text(
+                          '${provider.myArticles.length} items',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.hintText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),

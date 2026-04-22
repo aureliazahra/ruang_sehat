@@ -38,7 +38,7 @@ class ArticleServices {
     if (decoded['success'] != true) {
       if (decoded['errors'] != null &&
           decoded['errors'] is List &&
-          decoded['errors'].isNotEmpty){
+          decoded['errors'].isNotEmpty) {
         throw Exception(decoded['errors'][0]['message']);
       } else {
         throw Exception(decoded['messages'] ?? 'Terjadi kesalahan');
@@ -48,11 +48,17 @@ class ArticleServices {
     return decoded['data'];
   }
 
-
   //get all articles
   static Future<List<ArticleModels>> getArticles() async {
     final data = await _getRequest('');
     final List articles = data['articles'] ?? [];
     return articles.map((e) => ArticleModels.fromJson(e)).toList();
-   }
+  }
+
+  // get my articless
+  static Future<List<ArticleModels>> getMyArticles() async {
+    final data = await _getRequest('/user');
+    final List articles = data['articles'] ?? [];
+    return articles.map((e) => ArticleModels.fromJson(e)).toList();
+  }
 }

@@ -4,6 +4,7 @@ import 'package:ruang_sehat/features/articles/data/article_services.dart';
 
 class ArticleProviders with ChangeNotifier {
   List<ArticleModels> _articles = [];
+  List<ArticleModels> _myArticles = [];
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -11,6 +12,7 @@ class ArticleProviders with ChangeNotifier {
 
   //getter
   List<ArticleModels> get articles => _articles;
+  List<ArticleModels> get myArticles => _myArticles;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
@@ -50,5 +52,21 @@ class ArticleProviders with ChangeNotifier {
 
   String _parseError(Object e) {
     return e.toString().replaceAll('Exception: ', '');
+  }
+
+  //get all articles
+  Future<void> getMyArticles() async {
+    _setLoading(true);
+    _resetMessage();
+
+    try {
+      final result = await ArticleServices.getMyArticles();
+      _myArticles = result;
+    } catch (err) {
+      _errorMessage = _parseError(err);
+      _myArticles = [];
+    } finally {
+      _setLoading(false);
+    }
   }
 }
