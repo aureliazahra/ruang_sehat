@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
@@ -107,7 +108,7 @@ class RecommendedCard extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
-                        )
+                        
                           ],
                         ),
                       ),
@@ -115,6 +116,7 @@ class RecommendedCard extends StatelessWidget {
                   ],
                 ),
               ),
+              )
             );
           },
         );

@@ -8,7 +8,7 @@ class ArticleProviders with ChangeNotifier {
   ArticleModels? _detailArticle;
 
   bool _isLoading = false;
-  String? _errorMessage;
+  String? _errorMessage;        
   String? _successMessage;
 
   //getter

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:provider/provider.dart';
+import '../widgets/container_detail.dart';
 
 class DetailScreen extends StatefulWidget {
   const DetailScreen({super.key});
@@ -75,6 +76,15 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
             ),
+            
+            // Container detail article
+            Positioned(
+              top: 0,
+              left: 20,
+              right: 20,
+              child: ContainerDetail(article: article),
+             ),
+
 
             // Back button
             Positioned(
