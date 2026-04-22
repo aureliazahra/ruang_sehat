@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:ruang_sehat/features/articles/presentation/widgets/popup_menu.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,9 @@ class DetailScreen extends StatefulWidget {
 
 class _DetailScreenState extends State<DetailScreen> {
   static final String baseUrl = dotenv.env['BASE_URL']!;
+  bool isMenuOpen = false;
+
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +34,8 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map;
+    final isMe = args['isMe'] ?? false; 
     final provider = context.watch<ArticleProviders>();
 
     if (provider.isLoading) {
@@ -91,26 +97,72 @@ class _DetailScreenState extends State<DetailScreen> {
               top: 25,
               left: 25,
               right: 25,
-              child: Container(
-                width: 45,
-                height: 45,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: AppColors.text.withOpacity(0.3),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 7),
-                  child: IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: AppColors.secondary,
-                      size: 25,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.text.withOpacity(0.3),
                     ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 7),
+                      child: IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: AppColors.secondary,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (isMe)
+                  Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: AppColors.text.withOpacity(0.3),
+                    ),
+                    child:  IconButton(
+                      onPressed: () => {
+                        setState(() {
+                          isMenuOpen = !isMenuOpen;
+                        })
+                      },
+                      icon: const Icon(
+                        Icons.more_horiz,
+                        color: AppColors.secondary,
+                        size: 25,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            // Popup menu
+            if (isMenuOpen) ...[
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMenuOpen = false;
+                    });
+                  },
+                  child: Container(
+                    color: Colors.transparent,
                   ),
                 ),
               ),
-            ),
+              Positioned(
+                top: 20,
+                right: 20,
+                child: PopupMenu(),
+              )
+            ]
           ],
         ),
       ),
