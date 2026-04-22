@@ -7,6 +7,7 @@ import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/features/home/screens/home_screen.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:ruang_sehat/widgets/bottom_navbar.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,7 @@ void main() async{
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => ArticleProviders()),
       ],
       child: const MyApp(),
     ),
