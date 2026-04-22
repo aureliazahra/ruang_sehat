@@ -26,7 +26,15 @@ class RecommendedCard extends StatelessWidget {
           itemCount: provider.articles.length,
           itemBuilder: (context, index) {
             final article = provider.articles[index];
-            return Card(
+              return GestureDetector(
+              onTap: () {
+                Navigator.pushNamed(
+                  context,
+                  DetailScreen.routeName,
+                  arguments: {'id': article.id},
+                );
+              },
+              child: Card(
               color: AppColors.secondary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(24),
@@ -99,6 +107,7 @@ class RecommendedCard extends StatelessWidget {
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
+                        )
                           ],
                         ),
                       ),

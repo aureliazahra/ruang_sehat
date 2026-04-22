@@ -5,6 +5,7 @@ import 'package:ruang_sehat/features/articles/data/article_services.dart';
 class ArticleProviders with ChangeNotifier {
   List<ArticleModels> _articles = [];
   List<ArticleModels> _myArticles = [];
+  ArticleModels? _detailArticle;
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -17,6 +18,10 @@ class ArticleProviders with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
+
+  get detailArticle => null;
+
+  get detailArticles => null;
 
   Future<void> getArticles() async {
     _setLoading(true);
@@ -65,6 +70,22 @@ class ArticleProviders with ChangeNotifier {
     } catch (err) {
       _errorMessage = _parseError(err);
       _myArticles = [];
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  //get detail article
+  Future<void> getDetailArticle(String id) async {
+    _setLoading(true);
+    _resetMessage();
+
+    try {
+      final result = await ArticleServices.getDetailArticle(id);
+      _detailArticle = result;
+    } catch (e) {
+      _errorMessage = _parseError(e);
+      _detailArticle = null;
     } finally {
       _setLoading(false);
     }

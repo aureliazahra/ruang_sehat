@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
+import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
 
 class FeaturedCard extends StatelessWidget {
   const FeaturedCard({super.key});
@@ -28,104 +30,113 @@ class FeaturedCard extends StatelessWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
               final article = provider.articles[index];
-
-              return SizedBox(
-                width: 200,
-                child: Card(
-                  color: AppColors.secondary,
-                  clipBehavior: Clip.antiAlias,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Column(
-                      children: [
-                        //Image articles
-                        Stack(
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 196,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                  image: NetworkImage(
-                                    "$baseUrl/${article.image}",
-                                  ),
-                                  fit: BoxFit.cover,
-                                  alignment: Alignment.topCenter,
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              top: 10,
-                              left: 10,
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 4,
-                                ),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    DetailScreen.routeName,
+                    arguments: {'id': article.id},
+                  );
+                },
+                child: SizedBox(
+                  width: 200,
+                  child: Card(
+                    color: AppColors.secondary,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Column(
+                        children: [
+                          //Image articles
+                          Stack(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 196,
                                 decoration: BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.circular(99),
-                                ),
-                                child: Text(
-                                  article.category,
-                                  style: TextStyle(
-                                    color: AppColors.secondary,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
+                                  borderRadius: BorderRadius.circular(20),
+                                  image: DecorationImage(
+                                    image: NetworkImage(
+                                      "$baseUrl/${article.image}",
+                                    ),
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.topCenter,
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                        //Article title
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                     Text(
-                                      'Trending Article no ${index + 1}',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.hintText,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    Text(
-                                      article.date,
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: AppColors.hintText,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  article.title,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
+                              Positioned(
+                                top: 10,
+                                left: 10,
+                                child: Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
                                   ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primary,
+                                    borderRadius: BorderRadius.circular(99),
+                                  ),
+                                  child: Text(
+                                    article.category,
+                                    style: TextStyle(
+                                      color: AppColors.secondary,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
                                 ),
-                              ],
+                              ),
+                            ],
+                          ),
+                          //Article title
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Trending Article no ${index + 1}',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.hintText,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Text(
+                                        article.date,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: AppColors.hintText,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    article.title,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
