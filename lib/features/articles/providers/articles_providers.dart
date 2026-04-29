@@ -1,5 +1,7 @@
 import 'dart:convert';
-
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:ruang_sehat/features/articles/data/article_models.dart';
 import 'package:ruang_sehat/features/articles/data/article_services.dart';
@@ -88,6 +90,88 @@ class ArticleProviders with ChangeNotifier {
       _detailArticle = null;
     } finally {
       _setLoading(false);
+    }
+  }
+
+  // craate article
+  Future<void> createArtikel(
+    String title,
+    String description,
+    String category,
+    String imagePath,
+  ) async {
+    _setLoading(true);
+    _resetMessage();
+
+    try {
+      final streamedResponse = await ArticleServices.createArtikel(
+        File(imagePath),
+        title,
+        description,
+        category,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        await getMyArticles();
+        await getArticles();
+        _successMessage = data['message'] ?? 'Artikel berhasil dibuat';
+      } else if (response.statusCode == 400) {
+        final firstError = data['errors'][0];
+        _errorMessage = firstError['0'];
+      } else {
+        _errorMessage = data['message'] ?? 'Terjadi kesalahan';
+      }
+    } catch (e) {
+      _errorMessage = 'Terjadi kesalahan koneksi';
+    } finally {
+      _setLoading(false);
+      notifyListeners();
+    }
+  }
+
+  // update article
+  Future<void> updateArticle(
+    String id, {
+    String? title,
+    String? description,
+    String? category,
+    String? imagePath,
+  }) async {
+    _setLoading(true);
+    _resetMessage();
+
+    try {
+      final streamedResponse = await ArticleServices.updateArtikel(
+        id,
+        title: title,
+        description: description,
+        category: category,
+        image: imagePath != null ? File(imagePath) : null,
+      );
+
+      final response = await http.Response.fromStream(streamedResponse);
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        await getMyArticles();
+        await getArticles();
+        await getDetailArticle(id);
+      } else if (response.statusCode == 400) {
+        final firstError = data['errors'][0];
+        _errorMessage = firstError['message'] ?? "Terjadi kesalahan";
+      } else {
+        _errorMessage = data["messages"] ?? 'Terjadi Kesalahan';
+      }
+    } catch (e) {
+      _errorMessage = 'Terjadi kesalahan koneksi';
+    } finally {
+      _setLoading(false);
+      notifyListeners();
     }
   }
 

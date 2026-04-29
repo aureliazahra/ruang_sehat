@@ -3,6 +3,7 @@ import 'package:ruang_sehat/features/articles/data/article_models.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 
 class ArticleServices {
   static final String baseUrl = dotenv.env['BASE_URL']!;
@@ -68,6 +69,59 @@ class ArticleServices {
   static Future<ArticleModels> getDetailArticle(String id) async {
     final data = await _getRequest('/$id');
     return ArticleModels.fromJson(data);
+  }
+
+  // craete article
+  static Future<http.StreamedResponse> createArtikel(
+    File image,
+     String title,
+     String description,
+    String category,
+  ) async {
+    final uri = Uri.parse('$articleBaseUrl/create');
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    var request = http.MultipartRequest('POST', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+
+    request.fields['title'] = title;
+    request.fields['description'] = description;
+    request.fields['data'] = DateTime.now().toIso8601String();
+    request.fields['category'] = category;
+    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+    return await request.send();
+  }
+
+  // update article
+  static Future<http.StreamedResponse> updateArtikel(
+    String id, {
+    File? image,
+    String? title,
+    String? description,
+    String? category,
+  }) async {
+    final uri = Uri.parse('$articleBaseUrl/update/$id');
+
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    var request = http.MultipartRequest('PUT', uri);
+    request.headers['Authorization'] = 'Bearer $token';
+
+    if (title != null && title.isNotEmpty) request.fields['title'] = title;
+    if (description != null && description.isNotEmpty) {
+      request.fields['description'] = description;
+    }
+    if (category != null && category.isNotEmpty) {
+      request.fields['category'] = category;
+    }
+    if (image != null) {
+      request.files.add(await http.MultipartFile.fromPath('image', image.path));
+    }
+    return await request.send();
   }
 
   // delete article
