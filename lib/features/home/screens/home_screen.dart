@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/auth/presentation/screens/auth_screen.dart';
+import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
 import 'package:ruang_sehat/features/home/widgets/recommended_card.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/utils/snackbar_helper.dart';
+import 'package:ruang_sehat/widgets/modal_bottom_sheet.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key});
@@ -52,9 +57,36 @@ class HomeScreen extends StatelessWidget {
                 ),
                 color: Colors.white,
                 onSelected: (value) {
-                  if (value == 'logout') {
-                    Navigator.pushReplacementNamed(context, '/auth');
-                  }
+                  ModalBottomSheet.show(
+                    context: context,
+                    label: 'Are you sure you want to logout?',
+                    isLogout: true,
+                    onConfirm: () async {
+                      final authProvider = context.read<AuthProvider>();
+                      await authProvider.logout();
+
+                      if (authProvider.errorMessage == null) {
+                        SnackbarHelper.show(
+                          context,
+                          message:
+                              authProvider.successMessage ??
+                              'Logout successful',
+                          isError: false,
+                        );
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          AuthScreen.routeName,
+                          (route) => false,
+                        );
+                      } else {
+                        SnackbarHelper.show(
+                          context,
+                          message: authProvider.errorMessage??'error',
+                          isError: true,
+                        );
+                      }
+                    },
+                  );
                 },
                 itemBuilder: (context) => [
                   const PopupMenuItem(
@@ -133,8 +165,8 @@ class HomeScreen extends StatelessWidget {
                   SizedBox(height: 8),
                   RecommendedCard(),
                 ],
-              )
-            )
+              ),
+            ),
           ],
         ),
       ),

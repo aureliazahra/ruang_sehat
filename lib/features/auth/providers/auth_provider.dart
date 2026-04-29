@@ -82,4 +82,29 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // provider logout
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final token = prefs.getString('token');
+
+    if (token == null) {
+      _errorMessage = 'token tidak ditemukan';
+      notifyListeners();
+      return;
+    }
+
+    final response = await AuthService.logout();
+
+    final data = jsonDecode(response.body);
+
+    if (response.statusCode == 200) {
+      await prefs.remove('token');
+      _successMessage = data['message'] ?? 'Logout berhasil';
+    } else {
+      _errorMessage = data['message'] ?? 'Terjadi kesalahan';
+    }
+    notifyListeners();
+  }
 }

@@ -11,8 +11,10 @@ class ArticleServices {
   //helper private
   static Future<dynamic> _getRequest(String endpoint) async {
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token') ?? '';
-    if (token == null) throw Exception('Token not found');
+    final token = prefs.getString('token');
+    if (token == null || token.isEmpty) {
+      throw Exception('Token not found');
+    }
 
     final url = Uri.parse('$articleBaseUrl$endpoint');
 

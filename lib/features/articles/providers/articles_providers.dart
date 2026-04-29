@@ -19,9 +19,7 @@ class ArticleProviders with ChangeNotifier {
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
 
-  get detailArticle => null;
-
-  get detailArticles => null;
+  ArticleModels? get detailArticle => _detailArticle;
 
   Future<void> getArticles() async {
     _setLoading(true);
@@ -32,7 +30,7 @@ class ArticleProviders with ChangeNotifier {
 
       _articles = result;
 
-      if (result.isNotEmpty) {
+      if (result.isEmpty) {
         _errorMessage = 'Data artikel kosong';
       }
     } catch (err) {

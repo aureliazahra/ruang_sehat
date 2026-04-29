@@ -4,7 +4,6 @@ import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
-import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
 
 class FeaturedCard extends StatelessWidget {
   const FeaturedCard({super.key});
@@ -106,7 +105,7 @@ class FeaturedCard extends StatelessWidget {
                                       Text(
                                         'Trending Article no ${index + 1}',
                                         style: TextStyle(
-                                          fontSize: 10,
+                                          fontSize: 9,
                                           color: AppColors.hintText,
                                           fontWeight: FontWeight.w500,
                                         ),

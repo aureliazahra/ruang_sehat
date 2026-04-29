@@ -10,6 +10,8 @@ import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen
 class MyArticleScreen extends StatelessWidget {
   const MyArticleScreen({super.key});
 
+
+    
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +47,7 @@ class MyArticleScreen extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 16),
-                MyArticleScreen(),
+                MyArticlesCard(),
               ],
             ),
           ),
