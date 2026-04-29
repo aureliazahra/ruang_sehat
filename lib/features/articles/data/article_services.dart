@@ -64,8 +64,26 @@ class ArticleServices {
     return articles.map((e) => ArticleModels.fromJson(e)).toList();
   }
 
+  // get detail article
   static Future<ArticleModels> getDetailArticle(String id) async {
     final data = await _getRequest('/$id');
     return ArticleModels.fromJson(data);
+  }
+
+  // delete article
+  static Future<http.Response> deleteArticle(String id) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    var url = Uri.parse('$articleBaseUrl/$id');
+
+    final response = await http.delete(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    return response;
   }
 }

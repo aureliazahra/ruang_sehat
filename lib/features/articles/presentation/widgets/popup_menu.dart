@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/data/article_models.dart';
 import 'dart:ui';
-import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
 import 'package:ruang_sehat/features/articles/presentation/screens/form_article_screen.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
+import 'package:ruang_sehat/utils/snackbar_helper.dart';
+import 'package:ruang_sehat/widgets/bottom_navbar.dart';
+import 'package:ruang_sehat/widgets/modal_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 
 class PopupMenu extends StatelessWidget {
   const PopupMenu({super.key});
@@ -15,30 +21,61 @@ class PopupMenu extends StatelessWidget {
         child: Container(
           width: 180,
           padding: const EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.3),
-          ),
+          decoration: BoxDecoration(color: Colors.black.withOpacity(0.3)),
           child: Column(
             children: [
               ListTile(
                 leading: const Icon(Icons.edit, color: Colors.white),
                 title: const Text(
-                  'Edit Article', 
+                  'Edit Article',
                   style: TextStyle(color: Colors.white),
-                  ),
-                  onTap: () {
-                    Navigator.pushNamed(
-                      context,
-                      FormArticleScreen.routeName,
-                      arguments: {'isEdit': true},
-                    );
-                  },
+                ),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    FormArticleScreen.routeName,
+                    arguments: {'isEdit': true},
+                  );
+                },
               ),
               ListTile(
                 leading: const Icon(Icons.delete, color: Colors.red),
                 title: const Text(
-                  'Delete Article', 
-                  style: TextStyle(color: Colors.red)),
+                  'Delete Article',
+                  style: TextStyle(color: Colors.red),
+                ),
+                onTap: () {
+                  ModalBottomSheet.show(
+                    context: context,
+                    isLogout: false,
+                    label: 'Are you sure you want to delete this article?',
+                    onConfirm: () async {
+                      final articleProvider = context.read<ArticleProviders>();
+                      final navigator = Navigator.of(context);
+
+                      // tutup bottom sheet
+                      navigator.pop();
+
+                      await articleProvider.deleteArticle(articleid);
+
+                      if (articleProvider.errorMessage == null ) {
+                        SnackbarHelper.show(
+                          navigator.context,
+                          message: articleProvider.successMessage ?? 'Success',
+                          isError: false
+                        );
+
+                        navigator.pushNamedAndRemoveUntil(BottomNavbar.routeName, (route) => false, arguments: 1.);
+                      } else {
+                        SnackbarHelper.show(
+                          navigator.context,
+                          message: articleProvider.errorMessage ?? 'error',
+                          isError: true
+                        );
+                       }
+                    },
+                  );
+                },
               ),
             ],
           ),

@@ -20,6 +20,8 @@ class _BottomNavbarState extends State<BottomNavbar> {
   bool _isFirstLoad = true;
   List<Widget> _pages = [const HomeScreen(), const MyArticleScreen()];
 
+
+
   @override
   void initState() {
     super.initState();
@@ -28,6 +30,18 @@ class _BottomNavbarState extends State<BottomNavbar> {
       articleProvider.getArticles();
       articleProvider.getMyArticles();
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_isFirstLoad) {
+      final args= ModalRoute.of(context)?.settings.arguments;
+      if(args != null && args is int) {
+        _selectedIndex = args;
+      }
+      _isFirstLoad = false;
+    }
   }
 
   @override

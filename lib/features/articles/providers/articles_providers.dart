@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:ruang_sehat/features/articles/data/article_models.dart';
 import 'package:ruang_sehat/features/articles/data/article_services.dart';
@@ -8,7 +10,7 @@ class ArticleProviders with ChangeNotifier {
   ArticleModels? _detailArticle;
 
   bool _isLoading = false;
-  String? _errorMessage;        
+  String? _errorMessage;
   String? _successMessage;
 
   //getter
@@ -86,6 +88,34 @@ class ArticleProviders with ChangeNotifier {
       _detailArticle = null;
     } finally {
       _setLoading(false);
+    }
+  }
+
+  //delete article
+  Future<void> deleteArticle(String id) async {
+    _setLoading(true);
+    _resetMessage();
+
+    try {
+      final result = await ArticleServices.deleteArticle(id);
+
+      final data = jsonDecode(result.body);
+
+      if (result.statusCode == 200) {
+        await getMyArticles();
+        await getArticles();
+        _successMessage = data['message'] ?? 'Artikel berhasil dihapus';
+      } else if (result.statusCode == 400) {
+        final firstError = data['errors'][0];
+        _errorMessage = firstError['message'] ?? 'Terjadi kesalahan';
+      } else {
+        _errorMessage = data['message'] ?? 'Terjadi kesalahan';
+      }
+    } catch (e) {
+      _errorMessage = _parseError(e);
+    } finally {
+      _setLoading(false);
+      notifyListeners();
     }
   }
 }
