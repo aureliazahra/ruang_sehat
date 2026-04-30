@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/presentation/widgets/image_input.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
+import 'package:image_picker/image_picker.dart';
 
 class FormArticleScreen extends StatefulWidget {
   const FormArticleScreen({super.key});
@@ -14,6 +16,18 @@ class _FormArticleScreenState extends State<FormArticleScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController categoryController = TextEditingController();
+
+  String? imagePath;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedfile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedfile != null) {
+      setState(() {
+        imagePath = pickedfile.path;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +58,10 @@ class _FormArticleScreenState extends State<FormArticleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // image input
+              ImageInput(onTap: _pickImage, imagePath: imagePath),
+              const SizedBox(height: 20),
+
               // Label from Title
               Text(
                 'Title',

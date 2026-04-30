@@ -65,7 +65,7 @@ class PopupMenu extends StatelessWidget {
                           isError: false
                         );
 
-                        navigator.pushNamedAndRemoveUntil(BottomNavbar.routeName, (route) => false, arguments: 1.);
+                        navigator.pushNamedAndRemoveUntil(BottomNavbar.routeName, (route) => false, arguments: 1);
                       } else {
                         SnackbarHelper.show(
                           navigator.context,
