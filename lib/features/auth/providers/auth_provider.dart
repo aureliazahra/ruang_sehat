@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/auth/data/user_model.dart';
 import 'package:ruang_sehat/features/auth/data/user_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,11 +9,12 @@ class AuthProvider with ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   String? _successMessage;
+  UserModel? _profile;
 
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   String? get successMessage => _successMessage;
-
+  UserModel? get profile => _profile;
   // provider register
   Future<bool> register(String name, String username, String password) async {
     _isLoading = true;
@@ -104,6 +106,27 @@ class AuthProvider with ChangeNotifier {
       _successMessage = data['message'] ?? 'Logout berhasil';
     } else {
       _errorMessage = data['message'] ?? 'Terjadi kesalahan';
+    }
+    notifyListeners();
+  }
+
+  Future<void> getProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+
+    if (token == null || token.isEmpty) {
+      _errorMessage = 'Token tidak ditemukan';
+      notifyListeners();
+      return;
+    }
+
+    try {
+      final result = await AuthService.getProfile();
+      _profile = result;
+      _successMessage =
+      'Profile loaded successfully';
+    } catch (error) {
+      _errorMessage = 'Gagal memuat profil: $error';
     }
     notifyListeners();
   }

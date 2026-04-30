@@ -37,9 +37,13 @@ class HomeScreen extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Hi, Moci',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  Consumer<AuthProvider>(
+                    builder: (context, authProvider, child) {
+                      return Text(
+                        'Hi, ${authProvider.profile?.name ?? 'Moci'}',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                      );
+                    },
                   ),
                   Text(
                     'How are you feeling today?',

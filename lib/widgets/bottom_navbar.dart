@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/articles/presentation/screens/my_article_screen.dart';
+import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/features/home/screens/home_screen.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
@@ -27,8 +28,10 @@ class _BottomNavbarState extends State<BottomNavbar> {
     super.initState();
     Future.microtask(() {
       final articleProvider = context.read<ArticleProviders>();
+      final authProvider = context.read<AuthProvider>();
       articleProvider.getArticles();
       articleProvider.getMyArticles();
+      authProvider.getProfile();
     });
   }
 
