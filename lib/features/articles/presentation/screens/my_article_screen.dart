@@ -5,7 +5,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:ruang_sehat/features/articles/presentation/widgets/my_articles_card.dart';
 import 'package:provider/provider.dart';
 import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
-import 'package:ruang_sehat/features/articles/presentation/screens/detail_screen.dart';
+
 
 class MyArticleScreen extends StatelessWidget {
   const MyArticleScreen({super.key});

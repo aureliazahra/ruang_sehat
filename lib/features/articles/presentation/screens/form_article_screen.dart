@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:ruang_sehat/features/articles/presentation/widgets/image_input.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 import 'package:ruang_sehat/theme/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:ruang_sehat/utils/snackbar_helper.dart';
 
 class FormArticleScreen extends StatefulWidget {
   const FormArticleScreen({super.key});
@@ -29,13 +32,68 @@ class _FormArticleScreenState extends State<FormArticleScreen> {
     }
   }
 
+  Future<void> handleSubmit(bool isEdit, String? articleId) async {
+    final provider = context.read<ArticleProviders>();
+
+    if (isEdit && imagePath == null) {
+      SnackbarHelper.show(
+        context,
+        message: 'Please select an image',
+        isError: true,
+      );
+      return;
+    }
+    if (isEdit) {
+      // validasi artikel id
+      if (articleId == null) {
+        SnackbarHelper.show(
+          context,
+          message: 'ID artikel tidak ditemukan',
+          isError: true,
+        );
+        return;
+      }
+
+      await provider.updateArticle(
+        articleId,
+        title: titleController.text,
+        description: descriptionController.text,
+        category: categoryController.text,
+        imagePath: imagePath!,
+      );
+    } else {
+      await provider.createArtikel(
+        titleController.text,
+        descriptionController.text,
+        categoryController.text,
+        imagePath!,
+      );
+    }
+    if (!mounted) return;
+
+    if (provider.errorMessage == null){
+      SnackbarHelper.show(
+        context,
+        message: provider.successMessage ?? 'Success',
+        isError: false,
+      );
+    }else{
+      SnackbarHelper.show(
+        context,
+        message: provider.errorMessage ?? 'Error',
+        isError: true,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as Map?;
 
     final isEdit = args?['isEdit'] ?? false;
     final article = args?['article'];
-
+    final articleId = article?['id'];
+    
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -206,7 +264,7 @@ class _FormArticleScreenState extends State<FormArticleScreen> {
           padding: const EdgeInsets.all(20),
           child: ElevatedButton(
             onPressed: () {
-              // Handle save or update article logic here
+              handleSubmit(isEdit, isEdit ? articleId : null);
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,

@@ -33,6 +33,17 @@ class _BottomNavbarState extends State<BottomNavbar> {
   }
 
   @override
+  void didChangeDependencie() {
+    if (_isFirstLoad) {
+      final args = ModalRoute.of(context)?.settings.arguments;
+      if (args != null && args is int) {
+        _selectedIndex = args;
+      }
+      _isFirstLoad = false;
+    }
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (_isFirstLoad) {

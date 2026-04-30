@@ -143,7 +143,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         child: Container(color: Colors.transparent),
                       ),
                     ),
-                    Positioned(top: 20, right: 20, child: PopupMenu()),
+                    Positioned(top: 20, right: 20, child: PopupMenu(articleId: article.id,)),
                   ],
                 ],
               ),

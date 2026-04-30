@@ -120,15 +120,18 @@ class FeaturedCard extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    article.title,
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w600,
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      article.title,
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ],
                               ),
