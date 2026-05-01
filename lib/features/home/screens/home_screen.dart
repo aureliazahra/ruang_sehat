@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ruang_sehat/features/articles/providers/articles_providers.dart';
 import 'package:ruang_sehat/features/auth/presentation/screens/auth_screen.dart';
 import 'package:ruang_sehat/features/auth/providers/auth_provider.dart';
 import 'package:ruang_sehat/features/home/widgets/featured_card.dart';
@@ -41,7 +42,10 @@ class HomeScreen extends StatelessWidget {
                     builder: (context, authProvider, child) {
                       return Text(
                         'Hi, ${authProvider.profile?.name ?? 'Moci'}',
-                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                        ),
                       );
                     },
                   ),
@@ -85,7 +89,7 @@ class HomeScreen extends StatelessWidget {
                       } else {
                         SnackbarHelper.show(
                           context,
-                          message: authProvider.errorMessage??'error',
+                          message: authProvider.errorMessage ?? 'error',
                           isError: true,
                         );
                       }
@@ -112,66 +116,83 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            //Text Featured
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Featured',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const Text(
-                    'See More >',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: AppColors.hintText,
-                      fontWeight: FontWeight.w500,
+      body: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels >=
+              scrollInfo.metrics.maxScrollExtent - 200) {
+            final provider = context.read<ArticleProviders>();
+
+            if (!provider.isLoading && provider.hasNextPage) {
+              provider.getArticles(isRefresh: false);
+            }
+          }
+          return true;
+        },
+
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              //Text Featured
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Featured',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            // Featured Card
-            Padding(
-              padding: const EdgeInsets.only(left: 24, bottom: 10),
-              child: const FeaturedCard(),
-            ),
-            //Recommended Card
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Recommend for you',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                        ),
+                    const Text(
+                      'See More >',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.hintText,
+                        fontWeight: FontWeight.w500,
                       ),
-                      const Text(
-                        'See More >',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColors.hintText,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 8),
-                  RecommendedCard(),
-                ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              // Featured Card
+              Padding(
+                padding: const EdgeInsets.only(left: 24, bottom: 10),
+                child: const FeaturedCard(),
+              ),
+              //Recommended Card
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Recommend for you',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const Text(
+                          'See More >',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColors.hintText,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 8),
+                    RecommendedCard(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

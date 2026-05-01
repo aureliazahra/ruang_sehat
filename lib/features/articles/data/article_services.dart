@@ -9,15 +9,26 @@ class ArticleServices {
   static final String baseUrl = dotenv.env['BASE_URL']!;
   static final String articleBaseUrl = '$baseUrl/article';
 
-  //helper private
-  static Future<dynamic> _getRequest(String endpoint) async {
+  // Helper GET Request
+  static Future<dynamic> _getRequest(
+    String endpoint, {
+    Map<String, String>? queryParameters,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
+
     if (token == null || token.isEmpty) {
       throw Exception('Token not found');
     }
 
-    final url = Uri.parse('$articleBaseUrl$endpoint');
+    var uriString = '$articleBaseUrl$endpoint';
+
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final queryString = Uri(queryParameters: queryParameters).query;
+      uriString += '?$queryString';
+    }
+
+    final url = Uri.parse(uriString);
 
     final response = await http.get(
       url,
@@ -44,38 +55,54 @@ class ArticleServices {
           decoded['errors'].isNotEmpty) {
         throw Exception(decoded['errors'][0]['message']);
       } else {
-        throw Exception(decoded['messages'] ?? 'Terjadi kesalahan');
+        throw Exception(decoded['message'] ?? 'Terjadi kesalahan');
       }
     }
 
     return decoded['data'];
   }
 
-  //get all articles
-  static Future<List<ArticleModels>> getArticles() async {
-    final data = await _getRequest('');
+  // Get All Articles (With Pagination Params)
+  static Future<List<ArticleModels>> getArticles({
+    int page = 1,
+    int limit = 10,
+  }) async {
+    final data = await _getRequest(
+      '',
+      queryParameters: {
+        'page': page.toString(),
+        'limit': limit.toString(),
+      },
+    );
+
     final List articles = data['articles'] ?? [];
-    return articles.map((e) => ArticleModels.fromJson(e)).toList();
+
+    return articles
+        .map((e) => ArticleModels.fromJson(e))
+        .toList();
   }
 
-  // get my articless
+  // Get My Articles
   static Future<List<ArticleModels>> getMyArticles() async {
     final data = await _getRequest('/user');
     final List articles = data['articles'] ?? [];
-    return articles.map((e) => ArticleModels.fromJson(e)).toList();
+
+    return articles
+        .map((e) => ArticleModels.fromJson(e))
+        .toList();
   }
 
-  // get detail article
+  // Get Detail Article
   static Future<ArticleModels> getDetailArticle(String id) async {
     final data = await _getRequest('/$id');
     return ArticleModels.fromJson(data);
   }
 
-  // craete article
+  // Create Article
   static Future<http.StreamedResponse> createArtikel(
     File image,
-     String title,
-     String description,
+    String title,
+    String description,
     String category,
   ) async {
     final uri = Uri.parse('$articleBaseUrl/create');
@@ -88,14 +115,17 @@ class ArticleServices {
 
     request.fields['title'] = title;
     request.fields['description'] = description;
-    request.fields['data'] = DateTime.now().toIso8601String();
+    request.fields['date'] = DateTime.now().toIso8601String(); // ✅ fixed
     request.fields['category'] = category;
-    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+
+    request.files.add(
+      await http.MultipartFile.fromPath('image', image.path),
+    );
 
     return await request.send();
   }
 
-  // update article
+  // Update Article
   static Future<http.StreamedResponse> updateArtikel(
     String id, {
     File? image,
@@ -111,24 +141,33 @@ class ArticleServices {
     var request = http.MultipartRequest('PUT', uri);
     request.headers['Authorization'] = 'Bearer $token';
 
-    if (title != null && title.isNotEmpty) request.fields['title'] = title;
+    if (title != null && title.isNotEmpty) {
+      request.fields['title'] = title;
+    }
+
     if (description != null && description.isNotEmpty) {
       request.fields['description'] = description;
     }
+
     if (category != null && category.isNotEmpty) {
       request.fields['category'] = category;
     }
+
     if (image != null) {
-      request.files.add(await http.MultipartFile.fromPath('image', image.path));
+      request.files.add(
+        await http.MultipartFile.fromPath('image', image.path),
+      );
     }
+
     return await request.send();
   }
 
-  // delete article
+  // Delete Article
   static Future<http.Response> deleteArticle(String id) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    var url = Uri.parse('$articleBaseUrl/$id');
+
+    final url = Uri.parse('$articleBaseUrl/$id');
 
     final response = await http.delete(
       url,

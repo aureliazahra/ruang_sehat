@@ -14,21 +14,21 @@ class FeaturedCard extends StatelessWidget {
     return SizedBox(
       height: 300,
       child: Consumer<ArticleProviders>(
-        builder: (context, provider, child) {
+        builder: (context, provider, _) {
           if (provider.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (provider.errorMessage != null) {
-            return Center(child: Text(provider.errorMessage!));
+          if (provider.featuredArticles.isEmpty) {
+            return const Center(child: Text("Tidak ada artikel unggulan"));
           }
 
           return ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: provider.articles.length,
+            itemCount: provider.featuredArticles.length,
             separatorBuilder: (_, __) => const SizedBox(width: 8),
             itemBuilder: (context, index) {
-              final article = provider.articles[index];
+              final article = provider.featuredArticles[index];
               return GestureDetector(
                 onTap: () {
                   Navigator.pushNamed(
